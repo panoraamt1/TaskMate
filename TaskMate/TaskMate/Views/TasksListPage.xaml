@@ -1,0 +1,44 @@
+<!-- TasksListPage.xaml -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TaskMate.ViewModels"
+             x:Class="TaskMate.Views.TasksListPage"
+             Title="Ülesannete loend">
+
+    <ContentPage.BindingContext>
+        <vm:TasksListViewModel />
+    </ContentPage.BindingContext>
+
+    <StackLayout Padding="10">
+
+        <CollectionView ItemsSource="{Binding Tasks}" SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="Gray" Padding="10" Margin="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Ülesande info -->
+                            <StackLayout Grid.Column="0">
+                                <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                <Label Text="{Binding DueDate, StringFormat='Tähtaeg: {0:dd.MM.yyyy}'}" FontSize="12"/>
+                                <Label Text="{Binding Priority}" FontSize="12"/>
+                            </StackLayout>
+
+                            <!-- Edit nupp -->
+                            <Button Grid.Column="1" Text="Edit" Command="{Binding BindingContext.EditCommand, Source={x:Reference Name=TasksListPage}}" CommandParameter="{Binding .}" />
+
+                            <!-- Kustuta nupp -->
+                            <Button Grid.Column="2" Text="Del" Command="{Binding BindingContext.DeleteCommand, Source={x:Reference Name=TasksListPage}}" CommandParameter="{Binding .}" TextColor="Red"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </StackLayout>
+</ContentPage>
