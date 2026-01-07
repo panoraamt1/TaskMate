@@ -8,14 +8,16 @@
     Shell.FlyoutBehavior="Flyout"
     Title="TaskMate">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
+    <!-- Ava kohe TasksListPage -->
     <ShellContent
         Title="Ülesanded"
         ContentTemplate="{DataTemplate views:TasksListPage}"
         Route="TasksListPage" />
+
+    <!-- Home on alles menüüs, kui vaja -->
+    <ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate local:MainPage}"
+        Route="MainPage" />
 
 </Shell>

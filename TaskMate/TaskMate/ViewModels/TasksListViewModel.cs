@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using TaskMate.Models;
@@ -23,8 +25,23 @@ namespace TaskMate.ViewModels
 
         private void LoadTasks()
         {
-            var db = DatabaseService.Instance; // singleton teenus
-            var allTasks = db.GetTasks(); // tagastab List<TaskItem>
+            // FIKTIIVANDMED – ainult vaate testimiseks
+            var allTasks = new List<TaskItem>
+            {
+                new TaskItem
+                {
+                    Name = "Õpi MAUI",
+                    DueDate = DateTime.Today,
+                    Priority = "Kõrge"
+                },
+                new TaskItem
+                {
+                    Name = "Kirjuta projektitöö",
+                    DueDate = DateTime.Today.AddDays(2),
+                    Priority = "Keskmine"
+                }
+            };
+
             Tasks.Clear();
             foreach (var t in allTasks)
                 Tasks.Add(t);
