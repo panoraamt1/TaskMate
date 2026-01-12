@@ -3,12 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TaskMate.Views.HomePage"
              Title="TaskMate">
-    <StackLayout Padding="30" Spacing="20" VerticalOptions="Center">
-        <Image Source="taskmate_logo.png" HeightRequest="150"/>
-        <Label Text="Tere tulemast TaskMate'i!" FontSize="24" HorizontalOptions="Center"/>
 
-        <Button Text="Lisa ülesanne" Clicked="AddTask_Clicked"/>
-        <Button Text="Kõik ülesanded" Clicked="TasksList_Clicked"/>
-        <Button Text="Täna" Clicked="TodayTasks_Clicked"/>
-    </StackLayout>
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <Image Source="taskmate_logo.png" HeightRequest="120" />
+        <Label Text="Tere tulemast TaskMate'i!"
+               FontSize="22"
+               HorizontalOptions="Center" />
+
+        <Button Text="➕ Lisa ülesanne"
+                Clicked="OnAddTaskClicked"/>
+
+        <Button Text="📋 Kõik ülesanded" />
+        <Button Text="📅 Täna" />
+        <Button Text="⚙️ Seaded" />
+
+    </VerticalStackLayout>
 </ContentPage>
