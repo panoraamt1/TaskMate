@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:TaskMate.ViewModels"
              x:Class="TaskMate.Views.TasksListPage"
+             x:Name="PageRoot" 
              Title="Ülesannete loend">
 
+    <!-- BindingContext -->
     <ContentPage.BindingContext>
         <vm:TasksListViewModel />
     </ContentPage.BindingContext>
@@ -16,24 +18,38 @@
                 <DataTemplate>
                     <Frame BorderColor="Gray" Padding="10" Margin="5">
                         <Grid>
+                            <!-- 4 veergu: info, Edit, Del, Tehtud -->
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />      <!-- Ülesande info -->
+                                <ColumnDefinition Width="Auto" />   <!-- Edit nupp -->
+                                <ColumnDefinition Width="Auto" />   <!-- Del nupp -->
+                                <ColumnDefinition Width="Auto" />   <!-- Tehtud nupp -->
                             </Grid.ColumnDefinitions>
 
                             <!-- Ülesande info -->
                             <StackLayout Grid.Column="0">
                                 <Label Text="{Binding Name}" FontAttributes="Bold" />
                                 <Label Text="{Binding DueDate, StringFormat='Tähtaeg: {0:dd.MM.yyyy}'}" FontSize="12"/>
-                                <Label Text="{Binding Priority}" FontSize="12"/>
+                                <Label Text="{Binding Priority}" FontSize="12" TextColor="{Binding PriorityColor}"/>
+                                <!-- Näita ainult, kui tehtud -->
+                                <Label Text="Tehtud" IsVisible="{Binding IsDone}" FontSize="12" TextColor="Green"/>
                             </StackLayout>
 
                             <!-- Edit nupp -->
-                            <Button Grid.Column="1" Text="Edit" Command="{Binding BindingContext.EditCommand, Source={x:Reference Name=TasksListPage}}" CommandParameter="{Binding .}" />
+                            <Button Grid.Column="1" Text="Edit" 
+                                    Command="{Binding BindingContext.EditCommand, Source={x:Reference PageRoot}}" 
+                                    CommandParameter="{Binding .}" />
 
-                            <!-- Kustuta nupp -->
-                            <Button Grid.Column="2" Text="Del" Command="{Binding BindingContext.DeleteCommand, Source={x:Reference Name=TasksListPage}}" CommandParameter="{Binding .}" TextColor="Red"/>
+                            <!-- Delete nupp -->
+                            <Button Grid.Column="2" Text="Del"
+                                    Command="{Binding BindingContext.DeleteCommand, Source={x:Reference PageRoot}}"
+                                    CommandParameter="{Binding .}" 
+                                    TextColor="Red"/>
+
+                            <!-- Mark as Done nupp -->
+                            <Button Grid.Column="3" Text="Tehtud" 
+                                    Command="{Binding BindingContext.MarkDoneCommand, Source={x:Reference PageRoot}}" 
+                                    CommandParameter="{Binding .}" />
                         </Grid>
                     </Frame>
                 </DataTemplate>

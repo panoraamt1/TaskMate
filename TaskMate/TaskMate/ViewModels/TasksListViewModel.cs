@@ -14,11 +14,14 @@ namespace TaskMate.ViewModels
 
         public ICommand DeleteCommand { get; }
         public ICommand EditCommand { get; }
+        public ICommand MarkDoneCommand { get; }  // <- siia
 
         public TasksListViewModel()
         {
             DeleteCommand = new Command<TaskItem>(DeleteTask);
             EditCommand = new Command<TaskItem>(EditTask);
+            MarkDoneCommand = new Command<TaskItem>(MarkDone);  // <- ja siia konstruktoris
+
 
             LoadTasks();
         }
@@ -49,14 +52,19 @@ namespace TaskMate.ViewModels
 
         private void DeleteTask(TaskItem task)
         {
-            var db = DatabaseService.Instance;
-            db.DeleteTask(task.Id);
+            // ainult vaate testimiseks – eemalda Tasks kogumist
             Tasks.Remove(task);
         }
 
         private void EditTask(TaskItem task)
         {
             // Navigeeri EditTaskPage peale (hiljem lisame)
+        }
+
+        private void MarkDone(TaskItem task)
+        {
+            task.IsDone = true;
+            OnPropertyChanged(nameof(Tasks));
         }
     }
 }
