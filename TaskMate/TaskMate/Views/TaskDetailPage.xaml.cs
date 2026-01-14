@@ -1,9 +1,14 @@
-namespace TaskMate.Views;
+using TaskMate.Models;
+using TaskMate.ViewModels;
 
-public partial class NewContent1 : ContentView
+namespace TaskMate.Views
 {
-	public NewContent1()
-	{
-		InitializeComponent();
-	}
+    public partial class TaskDetailPage : ContentPage
+    {
+        public TaskDetailPage(TaskItem task)
+        {
+            InitializeComponent();
+            BindingContext = new TaskDetailViewModel(task);
+        }
+    }
 }
