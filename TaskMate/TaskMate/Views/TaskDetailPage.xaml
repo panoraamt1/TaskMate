@@ -4,11 +4,6 @@
              x:Class="TaskMate.Views.TaskDetailPage"
              Title="Ülesande detailid">
 
-    <!-- BindingContext -->
-    <ContentPage.BindingContext>
-        <vm:TaskDetailViewModel />
-    </ContentPage.BindingContext>
-
     <ScrollView>
         <StackLayout Padding="20" Spacing="15">
 
