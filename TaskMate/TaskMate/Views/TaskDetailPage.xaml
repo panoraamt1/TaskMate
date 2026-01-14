@@ -1,0 +1,71 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TaskMate.ViewModels"
+             x:Class="TaskMate.Views.TaskDetailPage"
+             Title="Ülesande detailid">
+
+    <!-- BindingContext -->
+    <ContentPage.BindingContext>
+        <vm:TaskDetailViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="15">
+
+            <!-- Task Name -->
+            <Label Text="{Binding Name}"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- Status -->
+            <Label Text="{Binding IsDone, StringFormat='Staatus: {0}'}"
+                   TextColor="Green"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <BoxView HeightRequest="1" Color="LightGray"/>
+
+            <!-- Due Date -->
+            <StackLayout>
+                <Label Text="Tähtaeg" FontAttributes="Bold"/>
+                <Label Text="{Binding DueDate, StringFormat='{0:dd.MM.yyyy}'}"/>
+            </StackLayout>
+
+            <!-- Priority -->
+            <StackLayout>
+                <Label Text="Prioriteet" FontAttributes="Bold"/>
+                <Label Text="{Binding Priority}"
+                       TextColor="{Binding PriorityColor}"/>
+            </StackLayout>
+
+            <!-- Description -->
+            <StackLayout>
+                <Label Text="Kirjeldus" FontAttributes="Bold"/>
+                <Label Text="{Binding Description}"
+                       LineBreakMode="WordWrap"/>
+            </StackLayout>
+
+            <BoxView HeightRequest="1" Color="LightGray"/>
+
+            <!-- Action Buttons -->
+            <Grid ColumnDefinitions="*,*"
+                  ColumnSpacing="10">
+
+                <Button Text="Muuda"
+                        Command="{Binding EditCommand}" />
+
+                <Button Text="Märgi tehtuks"
+                        Grid.Column="1"
+                        Command="{Binding MarkDoneCommand}"
+                        BackgroundColor="LightGreen" />
+            </Grid>
+
+            <!-- Delete -->
+            <Button Text="Kustuta"
+                    Command="{Binding DeleteCommand}"
+                    TextColor="Red"/>
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
