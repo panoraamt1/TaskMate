@@ -12,10 +12,10 @@
                    TextColor="Red"
                    HorizontalOptions="Center" />
 
-            <Label Text="{Binding IsDone, StringFormat='Staatus: {0}'}"
+            <Label Text="{Binding StatusText}"
                    TextColor="Green"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+                   FontAttributes="Bold" />
+
 
             <BoxView HeightRequest="1" Color="LightGray"/>
 

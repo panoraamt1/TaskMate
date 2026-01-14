@@ -12,9 +12,10 @@ namespace TaskMate
                 new TaskDetailPage(
                     new Models.TaskItem
                     {
-                        Name = "Test ülesanne",
-                        Description = "See on detailvaate test",
-                        DueDate = DateTime.Today.AddDays(3),
+                        IsDone = false,
+                        Name = "Nupud lisada",
+                        Description = "Edit, Delete",
+                        DueDate = DateTime.Today.AddDays(7),
                         Priority = "Kõrge"
                     }
                 )

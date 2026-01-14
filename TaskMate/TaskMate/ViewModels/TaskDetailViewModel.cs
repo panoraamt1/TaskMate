@@ -1,4 +1,3 @@
-using System;
 using System.Windows.Input;
 using TaskMate.Models;
 using Microsoft.Maui.Controls;
@@ -7,67 +6,55 @@ namespace TaskMate.ViewModels
 {
     public class TaskDetailViewModel : BaseViewModel
     {
-        private TaskItem _task;
-
-        public TaskItem Task
-        {
-            get => _task;
-            set
-            {
-                _task = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Name));
-                OnPropertyChanged(nameof(DueDate));
-                OnPropertyChanged(nameof(Priority));
-                OnPropertyChanged(nameof(IsDone));
-                OnPropertyChanged(nameof(PriorityColor));
-                OnPropertyChanged(nameof(Description));
-            }
-        }
-
-        // Exposed properties for binding (same style as list)
-        public string Name => Task?.Name;
-        public DateTime DueDate => Task?.DueDate ?? DateTime.Today;
-        public string Priority => Task?.Priority;
-        public bool IsDone => Task?.IsDone ?? false;
-        public string Description => Task?.Description;
-
-        public Color PriorityColor =>
-            Priority switch
-            {
-                "Kõrge" => Colors.Red,
-                "Keskmine" => Colors.Orange,
-                "Madal" => Colors.Green,
-                _ => Colors.Black
-            };
-
-        public ICommand EditCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand MarkDoneCommand { get; }
+        private TaskItem task;
 
         public TaskDetailViewModel(TaskItem task)
         {
-            Task = task;
+            this.task = task;
 
+            // Commands
+            MarkDoneCommand = new Command(MarkDone);
             EditCommand = new Command(EditTask);
             DeleteCommand = new Command(DeleteTask);
-            MarkDoneCommand = new Command(MarkDone);
+        }
+
+        // Expose properties for binding (pass-through to task)
+        public string Name => task.Name;
+        public string Description => task.Description;
+        public DateTime DueDate => task.DueDate;
+        public string Priority => task.Priority;
+        public string PriorityColor => task.PriorityColor;
+
+        // New computed property for status text
+        public string StatusText => task.IsDone ? "Tehtud" : "Tegemata";
+
+        // Commands
+        public ICommand MarkDoneCommand { get; }
+        public ICommand EditCommand { get; }
+        public ICommand DeleteCommand { get; }
+
+        private void MarkDone()
+        {
+            if (!task.IsDone)
+            {
+                task.IsDone = true;
+                OnPropertyChanged(nameof(StatusText));
+                // Also notify if you bind IsDone directly somewhere:
+                OnPropertyChanged(nameof(IsDone));
+            }
         }
 
         private void EditTask()
         {
-            // Hiljem: navigeeri EditTaskPage peale
+            // TODO: Implement edit logic
         }
 
         private void DeleteTask()
         {
-            // Hiljem: kustuta andmebaasist või mine tagasi listi
+            // TODO: Implement delete logic
         }
 
-        private void MarkDone()
-        {
-            Task.IsDone = true;
-            OnPropertyChanged(nameof(IsDone));
-        }
+        // Optional: expose IsDone if needed
+        public bool IsDone => task.IsDone;
     }
 }
