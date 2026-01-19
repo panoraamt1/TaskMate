@@ -13,7 +13,10 @@
 
     <StackLayout Padding="10">
 
-        <CollectionView ItemsSource="{Binding Tasks}" SelectionMode="Single">
+        <CollectionView
+            ItemsSource="{Binding Tasks}"
+            SelectionMode="Single"
+            SelectionChanged="OnTaskSelected">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame BorderColor="Gray" Padding="10" Margin="5">
@@ -47,9 +50,12 @@
                                     TextColor="Red"/>
 
                             <!-- Mark as Done nupp -->
-                            <Button Grid.Column="3" Text="Tehtud" 
-                                    Command="{Binding BindingContext.MarkDoneCommand, Source={x:Reference PageRoot}}" 
-                                    CommandParameter="{Binding .}" />
+                            <Button Grid.Column="3"
+                                Text="Tehtud"
+                                IsVisible="{Binding IsNotDone}"
+                                Command="{Binding BindingContext.MarkDoneCommand, Source={x:Reference PageRoot}}"
+                                CommandParameter="{Binding .}" />
+
                         </Grid>
                     </Frame>
                 </DataTemplate>

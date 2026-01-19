@@ -39,11 +39,20 @@ namespace TaskMate.Models
         }
 
         private bool isDone = false;
-        public bool IsDone 
-        { 
-            get => isDone; 
-            set { isDone = value; OnPropertyChanged(); } 
+        public bool IsDone
+        {
+            get => isDone;
+            set
+            {
+                isDone = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsNotDone));
+            }
         }
+
+        // UI jaoks – kas ülesanne pole veel tehtud
+        public bool IsNotDone => !IsDone;
+
 
         // UI jaoks arvutatav omadus
         public string PriorityColor
