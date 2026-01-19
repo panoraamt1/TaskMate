@@ -19,45 +19,45 @@
             SelectionChanged="OnTaskSelected">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame BorderColor="Gray" Padding="10" Margin="5">
-                        <Grid>
-                            <!-- 4 veergu: info, Edit, Del, Tehtud -->
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />      <!-- Ülesande info -->
-                                <ColumnDefinition Width="Auto" />   <!-- Edit nupp -->
-                                <ColumnDefinition Width="Auto" />   <!-- Del nupp -->
-                                <ColumnDefinition Width="Auto" />   <!-- Tehtud nupp -->
-                            </Grid.ColumnDefinitions>
+                    <Frame Padding="12" Margin="6" CornerRadius="12" BorderColor="#DDDDDD">
+                        <VerticalStackLayout Spacing="4">
 
-                            <!-- Ülesande info -->
-                            <StackLayout Grid.Column="0">
-                                <Label Text="{Binding Name}" FontAttributes="Bold" />
-                                <Label Text="{Binding DueDate, StringFormat='Tähtaeg: {0:dd.MM.yyyy}'}" FontSize="12"/>
-                                <Label Text="{Binding Priority}" FontSize="12" TextColor="{Binding PriorityColor}"/>
-                                <!-- Näita ainult, kui tehtud -->
-                                <Label Text="Tehtud" IsVisible="{Binding IsDone}" FontSize="12" TextColor="Green"/>
-                            </StackLayout>
+                            <Label Text="{Binding Name}"
+                                FontSize="16"
+                                FontAttributes="Bold" />
 
-                            <!-- Edit nupp -->
-                            <Button Grid.Column="1" Text="Edit" 
-                                    Command="{Binding BindingContext.EditCommand, Source={x:Reference PageRoot}}" 
-                                    CommandParameter="{Binding .}" />
+                            <Label Text="{Binding DueDate, StringFormat='Tähtaeg: {0:dd.MM.yyyy}'}"
+                                FontSize="12"
+                                TextColor="Gray" />
 
-                            <!-- Delete nupp -->
-                            <Button Grid.Column="2" Text="Del"
-                                    Command="{Binding BindingContext.DeleteCommand, Source={x:Reference PageRoot}}"
-                                    CommandParameter="{Binding .}" 
-                                    TextColor="Red"/>
+                            <Label Text="{Binding Priority}"
+                                FontSize="12"
+                                TextColor="{Binding PriorityColor}" />
 
-                            <!-- Mark as Done nupp -->
-                            <Button Grid.Column="3"
-                                Text="Tehtud"
-                                IsVisible="{Binding IsNotDone}"
-                                Command="{Binding BindingContext.MarkDoneCommand, Source={x:Reference PageRoot}}"
-                                CommandParameter="{Binding .}" />
+                            <Label Text="Tehtud"
+                                IsVisible="{Binding IsDone}"
+                                FontSize="12"
+                                TextColor="Green" />
 
-                        </Grid>
+                            <HorizontalStackLayout Spacing="8" Margin="0,6,0,0">
+                                <Button Text="Edit"
+                                        Command="{Binding BindingContext.EditCommand, Source={x:Reference PageRoot}}"
+                                        CommandParameter="{Binding .}" />
+
+                                <Button Text="Del"
+                                        TextColor="Red"
+                                        Command="{Binding BindingContext.DeleteCommand, Source={x:Reference PageRoot}}"
+                                        CommandParameter="{Binding .}" />
+
+                                <Button Text="Tehtud"
+                                        IsVisible="{Binding IsDone, Converter={StaticResource InverseBoolConverter}}"
+                                        Command="{Binding BindingContext.MarkDoneCommand, Source={x:Reference PageRoot}}"
+                                        CommandParameter="{Binding .}" />
+                            </HorizontalStackLayout>
+
+                        </VerticalStackLayout>
                     </Frame>
+
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
