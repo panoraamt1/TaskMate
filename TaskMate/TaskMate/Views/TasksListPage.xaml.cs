@@ -9,7 +9,9 @@ public partial class TasksListPage : ContentPage
     public TasksListPage()
     {
         InitializeComponent();
-        BindingContext = new TasksListViewModel();
+        BindingContext = new TasksListViewModel(
+            MauiProgram.Services.GetRequiredService<TaskDatabase>());
+
     }
 
     private async void OnTaskSelected(object sender, SelectionChangedEventArgs e)
