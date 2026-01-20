@@ -60,6 +60,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="Data\**" />
+	  <AndroidResource Remove="Models\**" />
+	  <Compile Remove="Data\**" />
+	  <Compile Remove="Models\**" />
+	  <EmbeddedResource Remove="Data\**" />
+	  <EmbeddedResource Remove="Models\**" />
+	  <MauiCss Remove="Data\**" />
+	  <MauiCss Remove="Models\**" />
+	  <MauiXaml Remove="Data\**" />
+	  <MauiXaml Remove="Models\**" />
+	  <None Remove="Data\**" />
+	  <None Remove="Models\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
