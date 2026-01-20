@@ -31,6 +31,13 @@ namespace TaskMate.Models
             set { dueDate = value; OnPropertyChanged(); } 
         }
 
+        private TimeSpan? reminderTime;
+        public TimeSpan? ReminderTime
+        {
+            get => reminderTime;
+            set { reminderTime = value; OnPropertyChanged(); }
+        }
+
         private string priority;
         public string Priority 
         { 
