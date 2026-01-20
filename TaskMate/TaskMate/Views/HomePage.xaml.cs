@@ -13,5 +13,15 @@ namespace TaskMate.Views
         {
             await Navigation.PushAsync(new AddTaskPage());
         }
+
+        private async void OnTasksClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new TasksListPage());
+        }
+
+        private async void OnTaskDetailClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new TaskDetailPage());
+        }
     }
 }
