@@ -8,39 +8,44 @@ namespace TaskMate.Data
 {
     public class DatabaseService
     {
-        
         private static DatabaseService _instance;
         public static DatabaseService Instance => _instance ??= new DatabaseService();
 
-        
         private readonly SQLiteAsyncConnection _database;
 
         private DatabaseService()
         {
             var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "taskmate.db3");
-
-            
             _database = new SQLiteAsyncConnection(dbPath);
 
-           
-            _database.CreateTableAsync<TaskItem>().Wait();
+            // REMOVED the .Wait() line from here!
         }
 
-        
-        public Task<List<TaskItem>> GetTasksAsync()
-            => _database.Table<TaskItem>().ToListAsync();
-
-       
-        public Task<int> SaveTaskAsync(TaskItem task)
+        // We add a helper method to ensure the table exists before we use it
+        private async Task Init()
         {
-            if (task.Id != 0)
-                return _database.UpdateAsync(task); 
-            else
-                return _database.InsertAsync(task); 
+            await _database.CreateTableAsync<TaskItem>();
         }
 
-        
-        public Task<int> DeleteTaskAsync(TaskItem task)
-            => _database.DeleteAsync(task);
+        public async Task<List<TaskItem>> GetTasksAsync()
+        {
+            await Init(); // Ensure table is ready
+            return await _database.Table<TaskItem>().ToListAsync();
+        }
+
+        public async Task<int> SaveTaskAsync(TaskItem task)
+        {
+            await Init(); // Ensure table is ready
+            if (task.Id != 0)
+                return await _database.UpdateAsync(task);
+            else
+                return await _database.InsertAsync(task);
+        }
+
+        public async Task<int> DeleteTaskAsync(TaskItem task)
+        {
+            await Init(); // Ensure table is ready
+            return await _database.DeleteAsync(task);
+        }
     }
 }

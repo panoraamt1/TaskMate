@@ -1,6 +1,8 @@
 using System.Windows.Input;
 using TaskMate.Models;
+using TaskMate.Data;
 using Microsoft.Maui.Controls;
+using System.Collections.Generic;
 
 namespace TaskMate.ViewModels
 {
@@ -8,53 +10,91 @@ namespace TaskMate.ViewModels
     {
         private TaskItem task;
 
+        public List<string> PriorityOptions { get; } = new List<string> { "Kõrge", "Keskmine", "Madal" };
+
         public TaskDetailViewModel(TaskItem task)
         {
-            this.task = task;
+            // Safety check: if task is null, create a blank one so the app doesn't crash
+            this.task = task ?? new TaskItem { Name = "Uus", Priority = "Madal" };
 
             // Commands
-            MarkDoneCommand = new Command(MarkDone);
-            EditCommand = new Command(EditTask);
-            DeleteCommand = new Command(DeleteTask);
+            MarkDoneCommand = new Command(async () => await MarkDone());
+            SaveCommand = new Command(async () => await SaveTask());
+            DeleteCommand = new Command(async () => await DeleteTask());
         }
 
-        // Expose properties for binding (pass-through to task)
-        public string Name => task.Name;
-        public string Description => task.Description;
-        public DateTime DueDate => task.DueDate;
-        public string Priority => task.Priority;
+        public string Name
+        {
+            get => task.Name;
+            set { task.Name = value; OnPropertyChanged(); }
+        }
+
+        public string Description
+        {
+            get => task.Description;
+            set { task.Description = value; OnPropertyChanged(); }
+        }
+
+        public DateTime DueDate
+        {
+            get => task.DueDate;
+            set { task.DueDate = value; OnPropertyChanged(); }
+        }
+
+        public string Priority
+        {
+            get => task.Priority;
+            set
+            {
+                task.Priority = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(PriorityColor));
+            }
+        }
+
         public string PriorityColor => task.PriorityColor;
-
-        // New computed property for status text
         public string StatusText => task.IsDone ? "Tehtud" : "Tegemata";
+        public bool IsDone => task.IsDone;
 
-        // Commands
         public ICommand MarkDoneCommand { get; }
-        public ICommand EditCommand { get; }
+        public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
 
-        private void MarkDone()
+        private async Task MarkDone()
         {
             if (!task.IsDone)
             {
                 task.IsDone = true;
+                await DatabaseService.Instance.SaveTaskAsync(task);
                 OnPropertyChanged(nameof(StatusText));
-                // Also notify if you bind IsDone directly somewhere:
                 OnPropertyChanged(nameof(IsDone));
             }
         }
 
-        private void EditTask()
+        private async Task SaveTask()
         {
-            // TODO: Implement edit logic
+            await DatabaseService.Instance.SaveTaskAsync(task);
+
+            // FIXED: Using Application.Current instead of Shell
+            if (Application.Current?.MainPage != null)
+            {
+                await Application.Current.MainPage.DisplayAlert("Salvestatud", "Muudatused on salvestatud!", "OK");
+            }
         }
 
-        private void DeleteTask()
+        private async Task DeleteTask()
         {
-            // TODO: Implement delete logic
-        }
+            if (Application.Current?.MainPage == null) return;
 
-        // Optional: expose IsDone if needed
-        public bool IsDone => task.IsDone;
+            bool confirm = await Application.Current.MainPage.DisplayAlert("Kustuta", "Kas soovid selle ülesande kustutada?", "Jah", "Ei");
+
+            if (confirm)
+            {
+                await DatabaseService.Instance.DeleteTaskAsync(this.task);
+
+                // FIXED: Using PopAsync to go back in a NavigationPage
+                await Application.Current.MainPage.Navigation.PopAsync();
+            }
+        }
     }
 }
