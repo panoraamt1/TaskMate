@@ -14,15 +14,15 @@ namespace TaskMate.ViewModels
 
         public TaskDetailViewModel(TaskItem task)
         {
-            // Safety check: if task is null, create a blank one so the app doesn't crash
             this.task = task ?? new TaskItem { Name = "Uus", Priority = "Madal" };
 
-            // Commands
-            MarkDoneCommand = new Command(async () => await MarkDone());
+            // Initialize Commands
+            MarkDoneCommand = new Command(async () => await ToggleDone());
             SaveCommand = new Command(async () => await SaveTask());
             DeleteCommand = new Command(async () => await DeleteTask());
         }
 
+        // Editable Properties
         public string Name
         {
             get => task.Name;
@@ -52,30 +52,35 @@ namespace TaskMate.ViewModels
             }
         }
 
+        // UI Helper Properties
         public string PriorityColor => task.PriorityColor;
         public string StatusText => task.IsDone ? "Tehtud" : "Tegemata";
         public bool IsDone => task.IsDone;
 
+        // Toggle Button Visuals
+        public string MarkDoneButtonText => task.IsDone ? "Märgi tegemata" : "Märgi tehtuks";
+        public string MarkDoneButtonColor => task.IsDone ? "#E67E22" : "#2ECC71";
+
+        // Commands
         public ICommand MarkDoneCommand { get; }
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
 
-        private async Task MarkDone()
+        private async Task ToggleDone()
         {
-            if (!task.IsDone)
-            {
-                task.IsDone = true;
-                await DatabaseService.Instance.SaveTaskAsync(task);
-                OnPropertyChanged(nameof(StatusText));
-                OnPropertyChanged(nameof(IsDone));
-            }
+            task.IsDone = !task.IsDone;
+            await DatabaseService.Instance.SaveTaskAsync(task);
+
+            // Refresh all status-related UI
+            OnPropertyChanged(nameof(StatusText));
+            OnPropertyChanged(nameof(IsDone));
+            OnPropertyChanged(nameof(MarkDoneButtonText));
+            OnPropertyChanged(nameof(MarkDoneButtonColor));
         }
 
         private async Task SaveTask()
         {
             await DatabaseService.Instance.SaveTaskAsync(task);
-
-            // FIXED: Using Application.Current instead of Shell
             if (Application.Current?.MainPage != null)
             {
                 await Application.Current.MainPage.DisplayAlert("Salvestatud", "Muudatused on salvestatud!", "OK");
@@ -87,12 +92,9 @@ namespace TaskMate.ViewModels
             if (Application.Current?.MainPage == null) return;
 
             bool confirm = await Application.Current.MainPage.DisplayAlert("Kustuta", "Kas soovid selle ülesande kustutada?", "Jah", "Ei");
-
             if (confirm)
             {
                 await DatabaseService.Instance.DeleteTaskAsync(this.task);
-
-                // FIXED: Using PopAsync to go back in a NavigationPage
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
         }
