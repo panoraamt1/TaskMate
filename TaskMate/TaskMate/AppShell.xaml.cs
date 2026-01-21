@@ -1,10 +1,12 @@
-﻿namespace TaskMate
+﻿namespace TaskMate;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+
+        // Register the detail page route
+        Routing.RegisterRoute("TaskDetailPage", typeof(TaskMate.Views.TaskDetailPage));
     }
 }

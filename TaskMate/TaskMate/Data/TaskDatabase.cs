@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 using SQLite;
 using TaskMate.Models;
 
-
 namespace TaskMate.Data
 {
-    class TaskDatabase
+    public class TaskDatabase 
     {
         private readonly SQLiteAsyncConnection _database;
 
@@ -23,7 +22,20 @@ namespace TaskMate.Data
             => _database.Table<TaskItem>().ToListAsync();
 
         public Task<int> SaveTaskAsync(TaskItem task)
-            => _database.InsertAsync(task);
+        {
+            if (task.Id != 0)
+            {
+                return _database.UpdateAsync(task);
+            }
+            else
+            {
+                return _database.InsertAsync(task);
+            }
+        }
 
+        public Task<int> DeleteTaskAsync(TaskItem task)
+        {
+            return _database.DeleteAsync(task);
+        }
     }
 }
