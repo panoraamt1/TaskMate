@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using TaskMate.Data;
 
 namespace TaskMate;
@@ -34,7 +34,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<TaskDatabase>(s => new TaskDatabase(dbPath));
 
         var app = builder.Build();
-
+        
         // Save the service provider for manual lookups
         Services = app.Services;
 

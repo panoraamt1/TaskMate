@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskMate.Views.AddTaskPage"
+             Title="Lisa ülesanne">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="12">
+
+            <Entry x:Name="nameEntry" Placeholder="Ülesande nimi" />
+
+            <Editor x:Name="descriptionEditor"
+                    Placeholder="Kirjeldus"
+                    AutoSize="TextChanges" />
+
+            <Label Text="Tähtaeg" />
+            <DatePicker x:Name="dueDatePicker" />
+
+            <Label Text="Meeldetuletuse kellaaeg (valikuline)" />
+            <TimePicker x:Name="reminderTimePicker" />
+
+            <Label Text="Prioriteet" />
+            <Picker x:Name="priorityPicker">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Madal</x:String>
+                        <x:String>Keskmine</x:String>
+                        <x:String>Kõrge</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Button Text="💾 Salvesta"
+                    Clicked="OnSaveClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

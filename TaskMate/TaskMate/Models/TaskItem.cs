@@ -12,24 +12,24 @@ namespace TaskMate.Models
         public int Id { get; set; }
 
         private string name;
-        public string Name
-        {
-            get => name;
-            set { name = value; OnPropertyChanged(); }
+        public string Name 
+        { 
+            get => name; 
+            set { name = value; OnPropertyChanged(); } 
         }
 
         private string description;
-        public string Description
-        {
-            get => description;
-            set { description = value; OnPropertyChanged(); }
+        public string Description 
+        { 
+            get => description; 
+            set { description = value; OnPropertyChanged(); } 
         }
 
         private DateTime dueDate;
-        public DateTime DueDate
-        {
-            get => dueDate;
-            set { dueDate = value; OnPropertyChanged(); }
+        public DateTime DueDate 
+        { 
+            get => dueDate; 
+            set { dueDate = value; OnPropertyChanged(); } 
         }
 
         private TimeSpan? reminderTime;
@@ -40,23 +40,23 @@ namespace TaskMate.Models
         }
 
         private string priority;
-        public string Priority
-        {
-            get => priority;
-            set
-            {
-                priority = value;
-                OnPropertyChanged();
+        public string Priority 
+        { 
+            get => priority; 
+            set 
+            { 
+                priority = value; 
+                OnPropertyChanged(); 
                 // This triggers the UI to re-check the color whenever the priority text changes
-                OnPropertyChanged(nameof(PriorityColor));
-            }
+                OnPropertyChanged(nameof(PriorityColor)); 
+            } 
         }
 
         private bool isDone = false;
-        public bool IsDone
-        {
-            get => isDone;
-            set { isDone = value; OnPropertyChanged(); }
+        public bool IsDone 
+        { 
+            get => isDone; 
+            set { isDone = value; OnPropertyChanged(); } 
         }
 
         // Helper property for UI coloring
