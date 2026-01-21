@@ -2,10 +2,11 @@ namespace TaskMate.Views;
 
 public partial class TaskDetailPage : ContentPage
 {
-    public TaskDetailPage()
+    // Constructor now takes the TaskItem
+    public TaskDetailPage(TaskMate.Models.TaskItem task)
     {
         InitializeComponent();
-        // The ViewModel will automatically get the task via the QueryProperty
-        BindingContext = new TaskMate.ViewModels.TaskDetailViewModel();
+        // Pass the task to the ViewModel
+        BindingContext = new TaskMate.ViewModels.TaskDetailViewModel(task);
     }
 }

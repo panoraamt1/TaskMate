@@ -1,5 +1,9 @@
 ﻿namespace TaskMate;
 
+using TaskMate.Views;
+using System.Globalization;
+using System.IO;
+
 public partial class App : Application
 {
     static Data.TaskDatabase database;
@@ -8,10 +12,7 @@ public partial class App : Application
         get
         {
             if (database == null)
-            {
-                string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TaskMate.db3");
-                database = new Data.TaskDatabase(dbPath);
-            }
+                database = new Data.TaskDatabase(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TaskMate.db3"));
             return database;
         }
     }
@@ -20,7 +21,10 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        // Use AppShell to handle the List -> Detail navigation
-        MainPage = new AppShell();
+        var culture = new CultureInfo("et-EE");
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+        MainPage = new NavigationPage(new HomePage());
     }
 }

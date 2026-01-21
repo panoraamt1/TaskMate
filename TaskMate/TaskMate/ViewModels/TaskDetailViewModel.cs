@@ -2,19 +2,15 @@ using System.Windows.Input;
 using TaskMate.Models;
 using TaskMate.Data;
 using Microsoft.Maui.Controls;
-using System.Collections.Generic;
 
 namespace TaskMate.ViewModels
 {
-    // This attribute links the navigation parameter to the Task property below
-    [QueryProperty(nameof(Task), "SelectedTask")]
     public class TaskDetailViewModel : BaseViewModel
     {
         private TaskItem _task;
 
         public List<string> PriorityOptions { get; } = new List<string> { "Kõrge", "Keskmine", "Madal" };
 
-        // This is the property that receives the data from the list
         public TaskItem Task
         {
             get => _task;
@@ -22,20 +18,22 @@ namespace TaskMate.ViewModels
             {
                 _task = value;
                 OnPropertyChanged();
-                // Refresh all fields when the task is loaded
                 RefreshProperties();
             }
         }
 
-        public TaskDetailViewModel()
+        // Constructor now accepts the task directly
+        public TaskDetailViewModel(TaskItem task)
         {
-            // Commands
+            // If no task is passed (null), create a new one
+            this.Task = task ?? new TaskItem { DueDate = DateTime.Now, Priority = "Madal" };
+
             MarkDoneCommand = new Command(async () => await ToggleDone());
             SaveCommand = new Command(async () => await SaveTask());
             DeleteCommand = new Command(async () => await DeleteTask());
         }
 
-        // Editable Properties
+        // Properties for UI Binding
         public string Name
         {
             get => Task?.Name;
@@ -107,11 +105,13 @@ namespace TaskMate.ViewModels
         private async Task DeleteTask()
         {
             if (Task == null) return;
+
             bool confirm = await Application.Current.MainPage.DisplayAlert("Kustuta", "Kas soovid ülesande kustutada?", "Jah", "Ei");
             if (confirm)
             {
                 await App.Database.DeleteTaskAsync(Task);
-                await Shell.Current.GoToAsync(".."); // Go back using Shell
+                // Standard navigation "Go Back"
+                await Application.Current.MainPage.Navigation.PopAsync();
             }
         }
     }

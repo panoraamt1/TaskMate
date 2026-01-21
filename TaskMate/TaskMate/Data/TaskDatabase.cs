@@ -8,7 +8,7 @@ using TaskMate.Models;
 
 namespace TaskMate.Data
 {
-    public class TaskDatabase 
+    public class TaskDatabase
     {
         private readonly SQLiteAsyncConnection _database;
 

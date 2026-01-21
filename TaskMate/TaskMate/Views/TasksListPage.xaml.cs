@@ -8,11 +8,9 @@ public partial class TasksListPage : ContentPage
     public TasksListPage()
     {
         InitializeComponent();
-        // The ViewModel handles the database loading now
         BindingContext = new TaskMate.ViewModels.TasksListViewModel();
     }
 
-    // This ensures the list refreshes every time you come back from the Detail Page
     protected override void OnAppearing()
     {
         base.OnAppearing();
@@ -27,14 +25,13 @@ public partial class TasksListPage : ContentPage
         var task = e.CurrentSelection.FirstOrDefault() as TaskItem;
         if (task == null) return;
 
-        var navigationParameter = new Dictionary<string, object>
-        {
-            { "SelectedTask", task }
-        };
+        await Navigation.PushAsync(new TaskDetailPage(task));
 
-        await Shell.Current.GoToAsync("TaskDetailPage", navigationParameter);
-
-        // Deselect item
         ((CollectionView)sender).SelectedItem = null;
+    }
+
+    private async void OnAddNewTaskClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new AddTaskPage());
     }
 }
