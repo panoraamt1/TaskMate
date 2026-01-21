@@ -6,17 +6,30 @@ using System.Collections.Generic;
 
 namespace TaskMate.ViewModels
 {
+    // This attribute links the navigation parameter to the Task property below
+    [QueryProperty(nameof(Task), "SelectedTask")]
     public class TaskDetailViewModel : BaseViewModel
     {
-        private TaskItem task;
+        private TaskItem _task;
 
         public List<string> PriorityOptions { get; } = new List<string> { "Kõrge", "Keskmine", "Madal" };
 
-        public TaskDetailViewModel(TaskItem task)
+        // This is the property that receives the data from the list
+        public TaskItem Task
         {
-            this.task = task ?? new TaskItem { Name = "Uus", Priority = "Madal" };
+            get => _task;
+            set
+            {
+                _task = value;
+                OnPropertyChanged();
+                // Refresh all fields when the task is loaded
+                RefreshProperties();
+            }
+        }
 
-            // Initialize Commands
+        public TaskDetailViewModel()
+        {
+            // Commands
             MarkDoneCommand = new Command(async () => await ToggleDone());
             SaveCommand = new Command(async () => await SaveTask());
             DeleteCommand = new Command(async () => await DeleteTask());
@@ -25,77 +38,80 @@ namespace TaskMate.ViewModels
         // Editable Properties
         public string Name
         {
-            get => task.Name;
-            set { task.Name = value; OnPropertyChanged(); }
+            get => Task?.Name;
+            set { if (Task != null) { Task.Name = value; OnPropertyChanged(); } }
         }
 
         public string Description
         {
-            get => task.Description;
-            set { task.Description = value; OnPropertyChanged(); }
+            get => Task?.Description;
+            set { if (Task != null) { Task.Description = value; OnPropertyChanged(); } }
         }
 
         public DateTime DueDate
         {
-            get => task.DueDate;
-            set { task.DueDate = value; OnPropertyChanged(); }
+            get => Task?.DueDate ?? DateTime.Now;
+            set { if (Task != null) { Task.DueDate = value; OnPropertyChanged(); } }
         }
 
         public string Priority
         {
-            get => task.Priority;
+            get => Task?.Priority;
             set
             {
-                task.Priority = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(PriorityColor));
+                if (Task != null)
+                {
+                    Task.Priority = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(PriorityColor));
+                }
             }
         }
 
-        // UI Helper Properties
-        public string PriorityColor => task.PriorityColor;
-        public string StatusText => task.IsDone ? "Tehtud" : "Tegemata";
-        public bool IsDone => task.IsDone;
+        public string PriorityColor => Task?.PriorityColor ?? "Gray";
+        public string StatusText => Task?.IsDone == true ? "Tehtud" : "Tegemata";
+        public string MarkDoneButtonText => Task?.IsDone == true ? "Märgi tegemata" : "Märgi tehtuks";
+        public string MarkDoneButtonColor => Task?.IsDone == true ? "#E67E22" : "#2ECC71";
 
-        // Toggle Button Visuals
-        public string MarkDoneButtonText => task.IsDone ? "Märgi tegemata" : "Märgi tehtuks";
-        public string MarkDoneButtonColor => task.IsDone ? "#E67E22" : "#2ECC71";
-
-        // Commands
         public ICommand MarkDoneCommand { get; }
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
 
-        private async Task ToggleDone()
+        private void RefreshProperties()
         {
-            task.IsDone = !task.IsDone;
-            await DatabaseService.Instance.SaveTaskAsync(task);
-
-            // Refresh all status-related UI
+            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(Description));
+            OnPropertyChanged(nameof(DueDate));
+            OnPropertyChanged(nameof(Priority));
             OnPropertyChanged(nameof(StatusText));
-            OnPropertyChanged(nameof(IsDone));
             OnPropertyChanged(nameof(MarkDoneButtonText));
             OnPropertyChanged(nameof(MarkDoneButtonColor));
+            OnPropertyChanged(nameof(PriorityColor));
+        }
+
+        private async Task ToggleDone()
+        {
+            if (Task == null) return;
+            Task.IsDone = !Task.IsDone;
+            await App.Database.SaveTaskAsync(Task);
+            RefreshProperties();
         }
 
         private async Task SaveTask()
         {
-            await DatabaseService.Instance.SaveTaskAsync(task);
-            if (Application.Current?.MainPage != null)
-            {
-                await Application.Current.MainPage.DisplayAlert("Salvestatud", "Muudatused on salvestatud!", "OK");
-            }
+            if (Task == null) return;
+            await App.Database.SaveTaskAsync(Task);
+            await Application.Current.MainPage.DisplayAlert("Salvestatud", "Muudatused on salvestatud!", "OK");
         }
 
         private async Task DeleteTask()
         {
-            if (Application.Current?.MainPage == null) return;
-
-            bool confirm = await Application.Current.MainPage.DisplayAlert("Kustuta", "Kas soovid selle ülesande kustutada?", "Jah", "Ei");
+            if (Task == null) return;
+            bool confirm = await Application.Current.MainPage.DisplayAlert("Kustuta", "Kas soovid ülesande kustutada?", "Jah", "Ei");
             if (confirm)
             {
-                await DatabaseService.Instance.DeleteTaskAsync(this.task);
-                await Application.Current.MainPage.Navigation.PopAsync();
+                await App.Database.DeleteTaskAsync(Task);
+                await Shell.Current.GoToAsync(".."); // Go back using Shell
             }
         }
     }

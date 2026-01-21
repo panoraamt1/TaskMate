@@ -60,6 +60,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="ViewModels\StrikeThroughConverter.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
@@ -75,6 +79,9 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Views\TaskDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\TasksListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
