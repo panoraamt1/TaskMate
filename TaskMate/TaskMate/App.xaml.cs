@@ -1,15 +1,20 @@
-﻿namespace TaskMate
+﻿using TaskMate.Views;
+using System.Globalization;
+
+namespace TaskMate
 {
     public partial class App : Application
     {
         public App()
         {
             InitializeComponent();
-        }
 
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            return new Window(new AppShell());
+            var culture = new CultureInfo("et-EE");
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+            MainPage = new NavigationPage(new HomePage());
         }
     }
+
 }

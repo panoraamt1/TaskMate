@@ -1,24 +1,26 @@
 ﻿using Microsoft.Extensions.Logging;
+using TaskMate.Data;
 
 namespace TaskMate;
 
 public static class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
-	{
-		var builder = MauiApp.CreateBuilder();
-		builder
-			.UseMauiApp<App>()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			});
+    public static IServiceProvider Services { get; private set; }
 
-#if DEBUG
-		builder.Logging.AddDebug();
-#endif
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
+        builder.UseMauiApp<App>();
 
-		return builder.Build();
-	}
+        string dbPath = Path.Combine(
+            FileSystem.AppDataDirectory, "taskmate.db3");
+
+        builder.Services.AddSingleton<TaskDatabase>(
+            s => new TaskDatabase(dbPath));
+
+        var app = builder.Build();
+        Services = app.Services;
+
+        return app;
+    }
 }
