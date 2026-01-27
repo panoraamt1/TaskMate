@@ -14,8 +14,10 @@
         <Button Text="➕ Lisa ülesanne"
                 Clicked="OnAddTaskClicked"/>
 
-        <Button Text="📋 Kõik ülesanded" />
-        <Button Text="📅 Täna" />
+        <Button Text="📋 Kõik ülesanded" 
+                Clicked="OnTasksClicked"/>
+        <Button Text="📅 Täna" 
+                Clicked="OnTaskDetailClicked"/>
         <Button Text="⚙️ Seaded" />
 
     </VerticalStackLayout>
