@@ -27,7 +27,8 @@ namespace TaskMate.Views
                 Priority = priorityPicker.SelectedItem?.ToString()
             };
 
-            await _database.SaveTaskAsync(task);
+            await App.Database.SaveTaskAsync(task);
+
 
             if (task.ReminderTime.HasValue &&
             (DeviceInfo.Platform == DevicePlatform.Android ||
