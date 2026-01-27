@@ -1,38 +1,34 @@
 using TaskMate.Models;
-using TaskMate.Data;
 using Plugin.LocalNotification;
-using Microsoft.Maui.Devices;
-
 
 namespace TaskMate.Views
 {
     public partial class AddTaskPage : ContentPage
     {
-        private readonly TaskDatabase _database;
-
         public AddTaskPage()
         {
             InitializeComponent();
-            _database = MauiProgram.Services.GetRequiredService<TaskDatabase>();
         }
 
         private async void OnSaveClicked(object sender, EventArgs e)
         {
+            // 1. Create the task object from UI inputs
             var task = new TaskItem
             {
                 Name = nameEntry.Text,
                 Description = descriptionEditor.Text,
                 DueDate = dueDatePicker.Date,
                 ReminderTime = reminderTimePicker.Time,
-                Priority = priorityPicker.SelectedItem?.ToString()
+                Priority = priorityPicker.SelectedItem?.ToString() ?? "Madal"
             };
 
+            // 2. Save to database using the static App property
             await App.Database.SaveTaskAsync(task);
 
-
+            // 3. Handle Notifications (Logic stays the same)
             if (task.ReminderTime.HasValue &&
-            (DeviceInfo.Platform == DevicePlatform.Android ||
-            DeviceInfo.Platform == DevicePlatform.iOS))
+               (DeviceInfo.Platform == DevicePlatform.Android ||
+                DeviceInfo.Platform == DevicePlatform.iOS))
             {
                 var notifyTime = task.DueDate.Date + task.ReminderTime.Value;
 
@@ -50,8 +46,11 @@ namespace TaskMate.Views
                 await LocalNotificationCenter.Current.Show(notification);
             }
 
+            // 4. Alert and Navigate back
             await DisplayAlert("Salvestatud", "Ülesanne lisatud!", "OK");
-            await Navigation.PopAsync();
+
+            // ".." means "go back one page" in Shell
+            await Shell.Current.GoToAsync("..");
         }
     }
 }

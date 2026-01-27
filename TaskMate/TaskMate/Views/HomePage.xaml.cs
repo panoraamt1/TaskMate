@@ -1,5 +1,4 @@
 using TaskMate.Views;
-using TaskMate.Models;
 
 namespace TaskMate.Views
 {
@@ -10,20 +9,17 @@ namespace TaskMate.Views
             InitializeComponent();
         }
 
-        private async void OnAddTaskClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new AddTaskPage());
-        }
-
         private async void OnTasksClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new TasksListPage());
+            // The "///" or "//" tells Shell: 
+            // "Don't push this on top of Home, switch the view to the TasksListPage branch."
+            await Shell.Current.GoToAsync("//TasksListPage");
         }
 
-        private async void OnTaskDetailClicked(object sender, EventArgs e)
+        private async void OnAddTaskClicked(object sender, EventArgs e)
         {
-            TaskItem selectedTask = new TaskItem(); // or get the real one
-            await Navigation.PushAsync(new TaskDetailPage(selectedTask));
+            // AddTaskPage is a "RegisterRoute" (sub-page), so we keep it as-is
+            await Shell.Current.GoToAsync(nameof(AddTaskPage));
         }
     }
 }

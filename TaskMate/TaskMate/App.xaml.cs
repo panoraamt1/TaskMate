@@ -21,11 +21,11 @@ public partial class App : Application
     {
         InitializeComponent();
 
-
         var culture = new CultureInfo("et-EE");
         CultureInfo.DefaultThreadCurrentCulture = culture;
         CultureInfo.DefaultThreadCurrentUICulture = culture;
 
-        MainPage = new NavigationPage(new HomePage());
+        // Change this line from NavigationPage to AppShell
+        MainPage = new AppShell();
     }
 }

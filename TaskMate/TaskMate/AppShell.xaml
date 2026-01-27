@@ -7,6 +7,11 @@
     Shell.FlyoutBehavior="Disabled">
 
     <ShellContent
+        Title="Avaleht"
+        ContentTemplate="{DataTemplate views:HomePage}"
+        Route="HomePage" />
+
+    <ShellContent
         Title="Minu Ülesanded"
         ContentTemplate="{DataTemplate views:TasksListPage}"
         Route="TasksListPage" />

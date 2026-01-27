@@ -1,5 +1,5 @@
-using System.Linq;
 using TaskMate.Models;
+using TaskMate.ViewModels;
 
 namespace TaskMate.Views;
 
@@ -8,13 +8,15 @@ public partial class TasksListPage : ContentPage
     public TasksListPage()
     {
         InitializeComponent();
-        BindingContext = new TaskMate.ViewModels.TasksListViewModel();
+        // The BindingContext is usually set here or via Dependency Injection
+        BindingContext = new TasksListViewModel();
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        if (BindingContext is TaskMate.ViewModels.TasksListViewModel vm)
+        // This ensures the list refreshes every time you navigate back
+        if (BindingContext is TasksListViewModel vm)
         {
             vm.LoadTasks();
         }
@@ -25,13 +27,27 @@ public partial class TasksListPage : ContentPage
         var task = e.CurrentSelection.FirstOrDefault() as TaskItem;
         if (task == null) return;
 
-        await Navigation.PushAsync(new TaskDetailPage(task));
+        // Use Shell navigation to stay consistent with your ViewModel
+        var navigationParameter = new Dictionary<string, object>
+        {
+            { "SelectedTask", task }
+        };
+        await Shell.Current.GoToAsync("TaskDetailPage", navigationParameter);
 
+        // Clear selection so the row doesn't stay highlighted
         ((CollectionView)sender).SelectedItem = null;
+    }
+
+   
+
+    private async void OnHomeClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//HomePage");
     }
 
     private async void OnAddNewTaskClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new AddTaskPage());
+        // Navigates to the add page
+        await Shell.Current.GoToAsync(nameof(AddTaskPage));
     }
 }

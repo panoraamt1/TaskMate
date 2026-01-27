@@ -19,15 +19,14 @@ namespace TaskMate.ViewModels
             EditCommand = new Command<TaskItem>(EditTask);
             MarkDoneCommand = new Command<TaskItem>(MarkDone);
 
-            LoadTasks();
+            // REMOVED LoadTasks() from here to prevent double-loading
         }
 
         public async void LoadTasks()
         {
-            Tasks.Clear();
-            // Using the lead's static database property
             var tasks = await App.Database.GetTasksAsync();
 
+            Tasks.Clear(); // Empty the UI list first
             foreach (var task in tasks)
                 Tasks.Add(task);
         }
@@ -44,7 +43,7 @@ namespace TaskMate.ViewModels
             if (task == null) return;
             task.IsDone = true;
             await App.Database.SaveTaskAsync(task);
-            LoadTasks(); // Refresh list
+            LoadTasks();
         }
 
         private async void EditTask(TaskItem task)
@@ -52,11 +51,10 @@ namespace TaskMate.ViewModels
             if (task == null) return;
 
             var navigationParameter = new Dictionary<string, object>
-    {
-        { "SelectedTask", task }
-    };
+            {
+                { "SelectedTask", task }
+            };
 
-            // This now sends the user to your TaskDetailPage
             await Shell.Current.GoToAsync("TaskDetailPage", navigationParameter);
         }
     }

@@ -1,4 +1,5 @@
-﻿namespace TaskMate;
+﻿using TaskMate.Views; 
+namespace TaskMate;
 
 public partial class AppShell : Shell
 {
@@ -6,7 +7,8 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
 
-        // Register the detail page route
-        Routing.RegisterRoute("TaskDetailPage", typeof(TaskMate.Views.TaskDetailPage));
+        // Registering routes allows GoToAsync("TaskDetailPage") to work
+        Routing.RegisterRoute(nameof(TaskDetailPage), typeof(TaskDetailPage));
+        Routing.RegisterRoute(nameof(AddTaskPage), typeof(AddTaskPage));
     }
 }

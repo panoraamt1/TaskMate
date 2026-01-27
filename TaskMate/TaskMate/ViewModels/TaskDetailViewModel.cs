@@ -1,10 +1,11 @@
 using System.Windows.Input;
 using TaskMate.Models;
-using TaskMate.Data;
 using Microsoft.Maui.Controls;
 
 namespace TaskMate.ViewModels
 {
+    // This attribute maps the dictionary key "SelectedTask" to the Task property below
+    [QueryProperty(nameof(Task), "SelectedTask")]
     public class TaskDetailViewModel : BaseViewModel
     {
         private TaskItem _task;
@@ -22,18 +23,18 @@ namespace TaskMate.ViewModels
             }
         }
 
-        // Constructor now accepts the task directly
-        public TaskDetailViewModel(TaskItem task)
+        public TaskDetailViewModel()
         {
-            // If no task is passed (null), create a new one
-            this.Task = task ?? new TaskItem { DueDate = DateTime.Now, Priority = "Madal" };
+            // Set default values in case we are adding a NEW task
+            if (Task == null)
+                Task = new TaskItem { DueDate = DateTime.Now, Priority = "Madal" };
 
             MarkDoneCommand = new Command(async () => await ToggleDone());
             SaveCommand = new Command(async () => await SaveTask());
             DeleteCommand = new Command(async () => await DeleteTask());
         }
 
-        // Properties for UI Binding
+        // UI Bindings
         public string Name
         {
             get => Task?.Name;
@@ -99,19 +100,19 @@ namespace TaskMate.ViewModels
         {
             if (Task == null) return;
             await App.Database.SaveTaskAsync(Task);
-            await Application.Current.MainPage.DisplayAlert("Salvestatud", "Muudatused on salvestatud!", "OK");
+            await Shell.Current.DisplayAlert("Salvestatud", "Muudatused on salvestatud!", "OK");
+            await Shell.Current.GoToAsync(".."); // Go back to the list
         }
 
         private async Task DeleteTask()
         {
             if (Task == null) return;
 
-            bool confirm = await Application.Current.MainPage.DisplayAlert("Kustuta", "Kas soovid ülesande kustutada?", "Jah", "Ei");
+            bool confirm = await Shell.Current.DisplayAlert("Kustuta", "Kas soovid ülesande kustutada?", "Jah", "Ei");
             if (confirm)
             {
                 await App.Database.DeleteTaskAsync(Task);
-                // Standard navigation "Go Back"
-                await Application.Current.MainPage.Navigation.PopAsync();
+                await Shell.Current.GoToAsync("..");
             }
         }
     }
