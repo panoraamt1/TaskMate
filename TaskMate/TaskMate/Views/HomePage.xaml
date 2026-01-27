@@ -16,8 +16,6 @@
 
         <Button Text="📋 Kõik ülesanded" 
                 Clicked="OnTasksClicked"/>
-        <Button Text="📅 Täna" />
-        <Button Text="⚙️ Seaded" />
 
     </VerticalStackLayout>
 </ContentPage>
