@@ -1,4 +1,5 @@
 using TaskMate.Views;
+using TaskMate.Models;
 
 namespace TaskMate.Views
 {
@@ -21,7 +22,8 @@ namespace TaskMate.Views
 
         private async void OnTaskDetailClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new TaskDetailPage());
+            TaskItem selectedTask = new TaskItem(); // or get the real one
+            await Navigation.PushAsync(new TaskDetailPage(selectedTask));
         }
     }
 }
