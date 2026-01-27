@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Logging;
 using TaskMate.Data;
+using Plugin.LocalNotification;
+
 
 namespace TaskMate;
 
@@ -18,6 +20,7 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+        builder.UseLocalNotification();
 
         // Initialize SQLite for mobile platforms
         SQLitePCL.Batteries.Init();

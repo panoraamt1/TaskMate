@@ -1,5 +1,8 @@
 using TaskMate.Models;
 using TaskMate.Data;
+using Plugin.LocalNotification;
+using Microsoft.Maui.Devices;
+
 
 namespace TaskMate.Views
 {
@@ -25,6 +28,27 @@ namespace TaskMate.Views
             };
 
             await _database.SaveTaskAsync(task);
+
+            if (task.ReminderTime.HasValue &&
+            (DeviceInfo.Platform == DevicePlatform.Android ||
+            DeviceInfo.Platform == DevicePlatform.iOS))
+            {
+                var notifyTime = task.DueDate.Date + task.ReminderTime.Value;
+
+                var notification = new NotificationRequest
+                {
+                    NotificationId = new Random().Next(1000, 9999),
+                    Title = "Meeldetuletus",
+                    Description = task.Name,
+                    Schedule = new NotificationRequestSchedule
+                    {
+                        NotifyTime = notifyTime
+                    }
+                };
+
+                await LocalNotificationCenter.Current.Show(notification);
+            }
+
             await DisplayAlert("Salvestatud", "Ülesanne lisatud!", "OK");
             await Navigation.PopAsync();
         }
