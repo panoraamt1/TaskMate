@@ -1,0 +1,71 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:TaskMate.ViewModels"
+             x:Class="TaskMate.Views.TasksListPage"
+             Title="Ülesanded">
+
+    <Grid RowDefinitions="*, Auto">
+        <CollectionView x:Name="TasksCollection"
+                        ItemsSource="{Binding Tasks}"
+                        SelectionMode="Single"
+                        SelectionChanged="OnTaskSelected"
+                        Grid.Row="0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10">
+                        <Frame HasShadow="True" BorderColor="LightGray" Padding="10">
+                            <Grid ColumnDefinitions="*, Auto">
+
+                                <HorizontalStackLayout Spacing="15" Grid.Column="0">
+                                    <Label Text="⬤" 
+                               TextColor="{Binding PriorityColor}" 
+                               VerticalOptions="Center"/>
+                                    <VerticalStackLayout VerticalOptions="Center">
+                                        <Label Text="{Binding Name}" 
+                                   FontAttributes="Bold" 
+                                   FontSize="16"
+                                   TextDecorations="None"/>
+                                        <Label Text="{Binding DueDate, StringFormat='{0:dd.MM.yyyy}'}" 
+                                   TextColor="Gray" 
+                                   FontSize="12"/>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+
+                                <HorizontalStackLayout Spacing="5" Grid.Column="1" VerticalOptions="Center">
+
+                                    <Button Text="✓"
+            Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:TasksListViewModel}}, Path=MarkDoneCommand}"
+            CommandParameter="{Binding .}"
+            BackgroundColor="#2ECC71"
+            TextColor="White"
+            WidthRequest="40"
+            HeightRequest="40"
+            CornerRadius="20"/>
+
+                                    <Button Text="✎"
+            Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:TasksListViewModel}}, Path=EditCommand}"
+            CommandParameter="{Binding .}"
+            BackgroundColor="#3498DB"
+            TextColor="White"
+            WidthRequest="40"
+            HeightRequest="40"
+            CornerRadius="20"/>
+
+                                    <Button Text="🗑"
+            Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:TasksListViewModel}}, Path=DeleteCommand}"
+            CommandParameter="{Binding .}"
+            BackgroundColor="#E74C3C"
+            TextColor="White"
+            WidthRequest="40"
+            HeightRequest="40"
+            CornerRadius="20"/>
+
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
